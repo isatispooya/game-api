@@ -24,4 +24,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('authentication.urls')),
     path('' , include('missions.urls')),
+    path('' , include('gift.urls')),
 ]

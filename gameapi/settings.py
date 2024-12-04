@@ -71,6 +71,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'missions',
     'rest_framework.authtoken',
+    'gift',
+
 ]
 
 MIDDLEWARE = [

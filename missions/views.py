@@ -178,7 +178,6 @@ class ShowUserMission(APIView):
             "total_score": total_score,
             "mission": serializer_mission
         }
-
         return Response(response, status=status.HTTP_200_OK)
     
 
