@@ -9,11 +9,8 @@ class Otp(models.Model):
         return self.code
     
 
-
-
-
 class UserProfile(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE )
     agent = models.CharField(max_length= 200 , null=True, blank=True )
     email = models.EmailField( null=True, blank=True)
     mobile = models.CharField(max_length=14)

@@ -130,12 +130,11 @@ class VerifyOtpSejamViewSet(APIView):
         try:
             with transaction.atomic():
                 if not user_profile:
-                    new_user = User.objects.create_user(
-                        username=data.get('mobile'), 
-                    )
+                    user = request.user
+                    
                     
                     user_profile = UserProfile.objects.create(
-                        user=new_user,
+                        user=user,
                         agent=data.get('agent'),
                         email=data.get('email'),
                         mobile=data.get('mobile'),
@@ -144,7 +143,7 @@ class VerifyOtpSejamViewSet(APIView):
                         uniqueIdentifier=data.get('uniqueIdentifier'),
                     )
                 else:
-                    new_user = user_profile.user
+                    user = user_profile.user
 
 
                 
@@ -178,7 +177,7 @@ class VerifyOtpSejamViewSet(APIView):
                             sheba = account_data.get('sheba', '')
 
                             Accounts.objects.create(
-                                user=new_user,
+                                user=user,
                                 accountNumber=accountNumber,
                                 bank=bank,
                                 branchCity=branchCity,
@@ -197,7 +196,7 @@ class VerifyOtpSejamViewSet(APIView):
                     jobInfo_data = data.get('jobInfo')
                     if isinstance(jobInfo_data, dict):
                         JobInfo.objects.create(
-                            user=new_user,
+                            user=user,
                             companyAddress=jobInfo_data.get('companyAddress', ''),
                             companyCityPrefix=jobInfo_data.get('companyCityPrefix', ''),
                             companyEmail=jobInfo_data.get('companyEmail', ''),
@@ -220,7 +219,7 @@ class VerifyOtpSejamViewSet(APIView):
                     if isinstance(privatePerson_data, dict):
                         print("privatePerson_data:", privatePerson_data)  # برای دیباگ
                         private_person = PrivatePerson.objects.create(
-                            user=new_user,
+                            user=user,
                             birthDate=privatePerson_data.get('birthDate', '') or '',
                             fatherName=privatePerson_data.get('fatherName', '') or '',
                             firstName=privatePerson_data.get('firstName', '') or '',
@@ -260,7 +259,7 @@ class VerifyOtpSejamViewSet(APIView):
 
                                 
                             TradingCodes.objects.create(
-                                user = new_user,
+                                user = user,
                                 code = code,
                                 firstPart = firstPart,
                                 secondPart = secondPart,
@@ -315,7 +314,7 @@ class VerifyOtpSejamViewSet(APIView):
                         tel = addresses_data.get('tel', '') or ''
                         website = addresses_data.get('website', '') or ''
                         Addresses.objects.create(
-                            user = new_user,
+                            user = user,    
                             alley = alley,
                             city = city,
                             cityPrefix = cityPrefix,

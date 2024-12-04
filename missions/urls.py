@@ -6,6 +6,6 @@ router = DefaultRouter()
 router.register(r'', views.MissionsViewSet, basename='missions')
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path('missions/<int:mission>/', views.MissionsViewSet.as_view() , name='missions'),
 ]
 
