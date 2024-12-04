@@ -24,6 +24,11 @@ class Missions(models.Model):
     coffee_done = models.BooleanField(default=False , null=True , blank=True)
     coffee_score = models.IntegerField(default=0)
     coffee_end_date = models.DateTimeField(null=True , blank=True)
+    photo = models.FileField(upload_to='photos/' , null=True , blank=True)
+    upload_photo_done = models.BooleanField(default=False , null=True , blank=True)
+    upload_photo_score = models.IntegerField(default=0)
+    upload_photo_end_date = models.DateTimeField(null=True , blank=True)
+
     def __str__(self):
         return self.user.username
 

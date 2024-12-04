@@ -100,6 +100,18 @@ class MissionsViewSet(APIView):
             mission.save()
             return Response({"message": "ماموریت با موفقیت ثبت شد"}, status=status.HTTP_200_OK)
         
+        elif mission == 8 : 
+            mission = Missions.objects.filter(user=user).first()
+            if not mission:
+                return Response({"error": "ماموریت یافت نشد"}, status=status.HTTP_404_NOT_FOUND)
+            photo = request.FILES.get('photo')
+            mission.photo = photo
+            mission.upload_photo_done = True
+            mission.upload_photo_score = 100
+            mission.upload_photo_end_date = timezone.now()
+            mission.save()
+            return Response({"message": "ماموریت با موفقیت ثبت شد"}, status=status.HTTP_200_OK)
+        
         else : 
             return Response({"error": "ماموریت یافت نشد"}, status=status.HTTP_404_NOT_FOUND)
         
@@ -153,7 +165,21 @@ class MissionsViewSet(APIView):
      
 
     
+class ShowUserMission(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request):
+        user = request.user
+        mission = Missions.objects.filter(user=user).first()
+        if not mission:
+            return Response({"error": "ماموریت کاربر یافت نشد"}, status=status.HTTP_404_NOT_FOUND)
+        serializer_mission = MissionsSerializer(mission).data
+        total_score = sum(value for field_name, value in serializer_mission.items() if field_name.endswith('_score') and value is not None)
+        response = {
+            "total_score": total_score,
+            "mission": serializer_mission
+        }
 
+        return Response(response, status=status.HTTP_200_OK)
     
 
 
