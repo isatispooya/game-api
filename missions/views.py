@@ -47,8 +47,63 @@ class MissionsViewSet(APIView):
             
 
             return Response({"message": "ماموریت با موفقیت ثبت شد"}, status=status.HTTP_200_OK)
+        elif mission == 3 : 
+            mission = Missions.objects.filter(user=user).first()
+            if not mission:
+                return Response({"error": "ماموریت یافت نشد"}, status=status.HTTP_404_NOT_FOUND)
+            mission.puzzle_done = True
+            mission.puzzle_score = 100
+            mission.puzzle_end_date = timezone.now()
+            mission.save()
+            return Response({"message": "ماموریت با موفقیت ثبت شد"}, status=status.HTTP_200_OK)
+        
+        elif mission == 4 : 
+            mission = Missions.objects.filter(user=user).first()
+            if not mission:
+                return Response({"error": "ماموریت یافت نشد"}, status=status.HTTP_404_NOT_FOUND)
+            mission.coffee_done = True
+            mission.coffee_score = 100
+            mission.coffee_end_date = timezone.now()
+            mission.save()
+            return Response({"message": "ماموریت با موفقیت ثبت شد"}, status=status.HTTP_200_OK)
+        
+        elif mission == 5 : 
+            mission = Missions.objects.filter(user=user).first()
+            if not mission:
+                return Response({"error": "ماموریت یافت نشد"}, status=status.HTTP_404_NOT_FOUND)
+            question_score_1 = request.data.get('question_score_1')
+            mission.test_question_1_score = question_score_1
+            mission.test_question_1_done = True
+            mission.test_question_1_end_date = timezone.now()
+            mission.save()
+            return Response({"message": "ماموریت با موفقیت ثبت شد"}, status=status.HTTP_200_OK)
+        
+        elif mission == 6 : 
+            mission = Missions.objects.filter(user=user).first()
+            if not mission:
+                return Response({"error": "ماموریت یافت نشد"}, status=status.HTTP_404_NOT_FOUND)
+            question_score_2 = request.data.get('question_score_2')
+            mission.test_question_2_score = question_score_2
+            mission.test_question_2_done = True
+            mission.test_question_2_end_date = timezone.now()
+            mission.save()
+            return Response({"message": "ماموریت با موفقیت ثبت شد"}, status=status.HTTP_200_OK)
+        
+        elif mission == 7 : 
+            mission = Missions.objects.filter(user=user).first()
+            if not mission:
+                return Response({"error": "ماموریت یافت نشد"}, status=status.HTTP_404_NOT_FOUND)
+            question_score_3 = request.data.get('question_score_3')
+            mission.test_question_3_score = question_score_3
+            mission.test_question_3_done = True
+            mission.test_question_3_end_date = timezone.now()
+            mission.save()
+            return Response({"message": "ماموریت با موفقیت ثبت شد"}, status=status.HTTP_200_OK)
+        
         else : 
-            return Response({"error": "ماموریت یافت نشد"}, status=status.HTTP_404_NOT_FOUND)    
+            return Response({"error": "ماموریت یافت نشد"}, status=status.HTTP_404_NOT_FOUND)
+        
+           
         
     def get(self, request):
         user = request.user

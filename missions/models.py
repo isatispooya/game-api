@@ -12,9 +12,18 @@ class Missions(models.Model):
     broker_done = models.BooleanField(default=False , null=True , blank=True)
     broker_score = models.IntegerField(default=0)
     broker_end_date = models.DateTimeField(null=True , blank=True)
-    test_question_done = models.BooleanField(default=False , null=True , blank=True)
-    test_question_score = models.IntegerField(default=0)
-    test_question_end_date = models.DateTimeField(null=True , blank=True)
+    test_question_1_done = models.BooleanField(default=False , null=True , blank=True)
+    test_question_1_score = models.IntegerField(default=0)
+    test_question_1_end_date = models.DateTimeField(null=True , blank=True)
+    test_question_2_done = models.BooleanField(default=False , null=True , blank=True)
+    test_question_2_score = models.IntegerField(default=0)
+    test_question_2_end_date = models.DateTimeField(null=True , blank=True)
+    test_question_3_done = models.BooleanField(default=False , null=True , blank=True)
+    test_question_3_score = models.IntegerField(default=0)
+    test_question_3_end_date = models.DateTimeField(null=True , blank=True)
+    coffee_done = models.BooleanField(default=False , null=True , blank=True)
+    coffee_score = models.IntegerField(default=0)
+    coffee_end_date = models.DateTimeField(null=True , blank=True)
     def __str__(self):
         return self.user.username
 
