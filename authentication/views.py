@@ -343,7 +343,15 @@ class VerifyOtpSejamViewSet(APIView):
             print(e)
             return Response({'message': 'خطایی نامشخص رخ داده است'}, status=status.HTTP_400_BAD_REQUEST)
 
+        missions = Missions.objects.filter(user=user).first()
+        if missions:
+            missions.sejam_done = True
+            missions.sejam_end_date = now()
+            missions.sejam_score = 100
+            missions.save()
+            
 
+        
         return Response({'message': 'اطلاعات سجامی کاربر ثبت شد'}, status=status.HTTP_200_OK)        
 
 

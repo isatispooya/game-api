@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from authentication.models import User
 from rest_framework import serializers
 from .models import Otp, TradingCodes , PrivatePerson , UserProfile , Accounts , Addresses , JobInfo 
 class UserSerializer(serializers.ModelSerializer):
@@ -11,7 +11,7 @@ class UserSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(
             username=validated_data['username'],
             mobile=validated_data['mobile'],
-            name=validated_data['name'],
+            name=validated_data('name' , ''),
         )
         return user
     
