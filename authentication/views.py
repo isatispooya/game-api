@@ -8,6 +8,7 @@ from sms import SendSmsCode
 import random
 from django.utils.decorators import method_decorator
 from django_ratelimit.decorators import ratelimit   
+
 from datetime import timedelta
 from django.utils.timezone import now
 import random
@@ -19,6 +20,9 @@ from django.db import transaction
 from missions.models import Missions
 from rest_framework.permissions import IsAuthenticated , AllowAny 
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework_simplejwt.tokens import AccessToken
+from rest_framework_simplejwt.exceptions import TokenError
 
 
 class OtpViewSet(APIView):
@@ -41,7 +45,7 @@ class LoginViewSet(APIView):
     def post(self, request):
         mobile = request.data.get('mobile')
         code = request.data.get('code')
-        name = request.data.get('name')
+        name = request.data.get('name','بی نام')
         
         if not mobile or not code:
             return Response({'error': 'شماره موبایل و کد الزامی است'}, status=status.HTTP_400_BAD_REQUEST)
@@ -53,12 +57,14 @@ class LoginViewSet(APIView):
         if otp.created_at < now() - timedelta(minutes=2):
             return Response({'error': 'کد OTP منقضی شده است'}, status=status.HTTP_400_BAD_REQUEST)
         
-        defaults = {}
-        if name: 
-            defaults['first_name'] = name 
-        user, created = User.objects.update_or_create(username=mobile, defaults=defaults)
-        if not Missions.objects.filter(user=user).exists():
-            missions = Missions.objects.create(user=user)
+        with transaction.atomic():
+            defaults = {}
+            if name: 
+                defaults['first_name'] = name 
+            user, created = User.objects.update_or_create(username=mobile, defaults=defaults)
+            
+            # ایجاد mission با استفاده از مقادیر پیش‌فرض مدل
+            Missions.objects.get_or_create(user=user)
         
         refresh = RefreshToken.for_user(user)
         
@@ -118,7 +124,7 @@ class VerifyOtpSejamViewSet(APIView):
         try :
             data = response['data']
         except:
-            return Response({'message' :'مجددا تلاش کنید'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'message' :'مج��د تلاش کنید'}, status=status.HTTP_400_BAD_REQUEST)
         if data == None :
             return Response({'message' :'مجددا تلاش کنید'}, status=status.HTTP_400_BAD_REQUEST)
         if not data.get('uniqueIdentifier'):
@@ -353,6 +359,32 @@ class VerifyOtpSejamViewSet(APIView):
 
         
         return Response({'message': 'اطلاعات سجامی کاربر ثبت شد'}, status=status.HTTP_200_OK)        
+
+
+class VerifyTokenView(APIView):
+    permission_classes = [AllowAny]
+    
+    def get(self, request):
+        token = request.data.get('token')
+        
+        if not token:
+            return Response(
+                {'error': 'توکن ارائه نشده است'}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+            
+        try:
+            # تلاش برای decode کردن توکن
+            AccessToken(token)
+            return Response(
+                {'valid': True, 'message': 'توکن معتبر است'}, 
+                status=status.HTTP_200_OK
+            )
+        except TokenError:
+            return Response(
+                {'valid': False, 'message': 'توکن نامعتبر است'}, 
+                status=status.HTTP_401_UNAUTHORIZED
+            )
 
 
 
