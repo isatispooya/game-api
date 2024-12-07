@@ -23,8 +23,10 @@ class MissionsViewSet(APIView):
             
             if not mission.test_question_1_open:
                 return Response({"error": "این ماموریت هنوز باز نشده است"}, status=status.HTTP_400_BAD_REQUEST)
-                
-            question_score_1 = request.data.get('question_score_1')
+            try:
+                question_score_1 =int(request.data.get('question_score_1'))
+            except Exception:
+                return Response({"error": "امتیاز باید عدد باشد"}, status=status.HTTP_400_BAD_REQUEST)
             mission.test_question_1_score = question_score_1
             mission.test_question_1_done = True
             mission.test_question_1_end_date = timezone.now()
@@ -53,7 +55,10 @@ class MissionsViewSet(APIView):
             if not mission.test_question_2_open:
                 return Response({"error": "این ماموریت هنوز باز نشده است"}, status=status.HTTP_400_BAD_REQUEST)
   
-            question_score_2 = request.data.get('question_score_2')
+            try:
+                question_score_2 = int(request.data.get('question_score_2'))
+            except Exception:
+                return Response({"error": "امتیاز باید عدد باشد"}, status=status.HTTP_400_BAD_REQUEST)
             mission.test_question_2_score = question_score_2
             mission.test_question_2_done = True
             mission.test_question_2_end_date = timezone.now()
@@ -93,7 +98,10 @@ class MissionsViewSet(APIView):
                 return Response({"error": "ماموریت یافت نشد"}, status=status.HTTP_404_NOT_FOUND)
             if not mission.test_question_3_open:
                 return Response({"error": "این ماموریت هنوز باز نشده است"}, status=status.HTTP_400_BAD_REQUEST)
-            question_score_3 = request.data.get('question_score_3')
+            try:
+                question_score_3 = int(request.data.get('question_score_3'))
+            except Exception:
+                return Response({"error": "امتیاز باید عدد باشد"}, status=status.HTTP_400_BAD_REQUEST)
             mission.test_question_3_score = question_score_3
             mission.test_question_3_done = True
             mission.test_question_3_end_date = timezone.now()
@@ -120,7 +128,10 @@ class MissionsViewSet(APIView):
                 return Response({"error": "ماموریت یافت نشد"}, status=status.HTTP_404_NOT_FOUND)
             if not mission.test_question_4_open:
                 return Response({"error": "این ماموریت هنوز باز نشده است"}, status=status.HTTP_400_BAD_REQUEST)
-            question_score_4 = request.data.get('question_score_4')
+            try:
+                question_score_4 = int(request.data.get('question_score_4'))
+            except Exception:
+                return Response({"error": "امتیاز باید عدد باشد"}, status=status.HTTP_400_BAD_REQUEST)
             mission.test_question_4_score = question_score_4
             mission.test_question_4_done = True
             mission.test_question_4_end_date = timezone.now()
