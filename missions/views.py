@@ -149,7 +149,9 @@ class MissionsViewSet(APIView):
                 return Response({"error": "ماموریت یافت نشد"}, status=status.HTTP_404_NOT_FOUND)
             if not mission.upload_photo_open:
                 return Response({"error": "این ماموریت هنوز باز نشده است"}, status=status.HTTP_400_BAD_REQUEST)
-            photo = request.FILES.get('photo')
+            photo = request.FILES['photo']
+            if not photo:
+                return Response({"error": "فایل عکس باید وارد شود"}, status=status.HTTP_400_BAD_REQUEST)
             mission.photo = photo
             mission.upload_photo_done = True
             mission.upload_photo_score = 100
