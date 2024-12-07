@@ -24,7 +24,7 @@ class MissionsViewSet(APIView):
             if not mission.test_question_1_open:
                 return Response({"error": "این ماموریت هنوز باز نشده است"}, status=status.HTTP_400_BAD_REQUEST)
             try:
-                question_score_1 =int(request.data.get('question_score_1'))
+                question_score_1 =int(request.data.get('score'))
             except Exception:
                 return Response({"error": "امتیاز باید عدد باشد"}, status=status.HTTP_400_BAD_REQUEST)
             mission.test_question_1_score = question_score_1
@@ -56,7 +56,7 @@ class MissionsViewSet(APIView):
                 return Response({"error": "این ماموریت هنوز باز نشده است"}, status=status.HTTP_400_BAD_REQUEST)
   
             try:
-                question_score_2 = int(request.data.get('question_score_2'))
+                question_score_2 = int(request.data.get('score'))
             except Exception:
                 return Response({"error": "امتیاز باید عدد باشد"}, status=status.HTTP_400_BAD_REQUEST)
             mission.test_question_2_score = question_score_2
@@ -99,7 +99,7 @@ class MissionsViewSet(APIView):
             if not mission.test_question_3_open:
                 return Response({"error": "این ماموریت هنوز باز نشده است"}, status=status.HTTP_400_BAD_REQUEST)
             try:
-                question_score_3 = int(request.data.get('question_score_3'))
+                question_score_3 = int(request.data.get('score'))
             except Exception:
                 return Response({"error": "امتیاز باید عدد باشد"}, status=status.HTTP_400_BAD_REQUEST)
             mission.test_question_3_score = question_score_3
@@ -129,7 +129,7 @@ class MissionsViewSet(APIView):
             if not mission.test_question_4_open:
                 return Response({"error": "این ماموریت هنوز باز نشده است"}, status=status.HTTP_400_BAD_REQUEST)
             try:
-                question_score_4 = int(request.data.get('question_score_4'))
+                question_score_4 = int(request.data.get('score'))
             except Exception:
                 return Response({"error": "امتیاز باید عدد باشد"}, status=status.HTTP_400_BAD_REQUEST)
             mission.test_question_4_score = question_score_4

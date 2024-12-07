@@ -365,7 +365,7 @@ class VerifyOtpSejamViewSet(APIView):
         if missions:
             missions.sejam_done = True
             missions.sejam_end_date = now()
-            missions.sejam_score = 100
+            missions.sejam_score = 50
             missions.save()
 
         excel_file = 'broker.xlsx'
@@ -391,7 +391,7 @@ class VerifyOtpSejamViewSet(APIView):
             if missions:
                 missions.broker_done = True
                 missions.broker_end_date = now()
-                missions.broker_score = 100
+                missions.broker_score = 50
                 missions.test_question_1_open = True
                 missions.save()
         return Response({'message': 'اطلاعات سجامی کاربر ثبت شد و امتیاز کارگزاری و سجامی به 100 تنظیم شد'}, status=status.HTTP_200_OK)        
