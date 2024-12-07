@@ -71,7 +71,6 @@ INSTALLED_APPS = [
     'corsheaders',
     'missions',
     'rest_framework.authtoken',
-    'gift',
 
 ]
 
@@ -116,8 +115,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'game',
         'USER': 'postgres',
-        # 'PASSWORD': 'admin123',
-        'PASSWORD': 'Moeen....6168',
+        'PASSWORD': 'admin123',
+        # 'PASSWORD': 'Moeen....6168',
         'HOST': 'localhost',
         'PORT': '5432',
     }

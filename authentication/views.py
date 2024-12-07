@@ -82,6 +82,7 @@ class OtpSejamViewSet(APIView):
     permission_classes = [IsAuthenticated]
     @method_decorator(ratelimit(key='ip', rate='2/m', method='POST', block=True))
     def post(self, request):
+        user = request.user
         uniqueIdentifier = request.data.get('uniqueIdentifier')
         if not uniqueIdentifier:
             return Response({'error': 'uniqueIdentifier is required'}, status=status.HTTP_400_BAD_REQUEST)
@@ -97,8 +98,18 @@ class OtpSejamViewSet(APIView):
                 }
             response = requests.request("POST", url, headers=headers, data=payload)
             if response.status_code >=300 :
-                return Response ({ 'message' : ' 1 کد تایید ارسال شد'},status=status.HTTP_200_OK)
-            return Response ({ 'message' : ' 2 کد تایید ارسال شد'},status=status.HTTP_200_OK)
+                missions = Missions.objects.filter(user=user).first()
+                if missions:
+                    missions.sejam_done = True
+                    missions.sejam_end_date = now()
+                    missions.sejam_score = 0
+                    missions.broker_done = True
+                    missions.broker_end_date = now()
+                    missions.broker_score = 0
+                    missions.test_question_1_open = True
+                    missions.save()
+                return Response ({ 'message' : 'شما سجامی نیستید'},status=status.HTTP_200_OK)
+            return Response ({ 'message' : 'کد تایید ارسال شد'},status=status.HTTP_200_OK)
         else:
             return Response({'message': 'کاربر قبلا ثبت شده است'}, status=status.HTTP_200_OK)
 
@@ -356,6 +367,7 @@ class VerifyOtpSejamViewSet(APIView):
             missions.sejam_end_date = now()
             missions.sejam_score = 100
             missions.save()
+
         excel_file = 'broker.xlsx'
         if not excel_file:
             return Response({"error": "فایل اکسل یافت نشد"}, status=status.HTTP_400_BAD_REQUEST)
@@ -364,16 +376,17 @@ class VerifyOtpSejamViewSet(APIView):
         if df.empty:
             return Response({"error": "فایل اکسل خالی است"}, status=status.HTTP_400_BAD_REQUEST)
         
-        if 'کدملی' not in df.columns:
-            return Response({"error": "کدملی در فایل اکسل یافت نشد"}, status=status.HTTP_400_BAD_REQUEST)
+        if 'شناسه ملی' not in df.columns:
+            return Response({"error": "شناسه ملی در فایل اکسل یافت نشد"}, status=status.HTTP_400_BAD_REQUEST)
         uniqueIdentifier = str(uniqueIdentifier)
-        if not (df['کدملی'].astype(str) == str(uniqueIdentifier)).any():
+        if not (df['شناسه ملی'].astype(str) == str(uniqueIdentifier)).any():
             if missions:
                 missions.broker_done = True
                 missions.broker_end_date = now()
                 missions.broker_score = 0
+                missions.test_question_1_open = True
                 missions.save()
-            return Response({"error": "امتیاز شما برای کارگزاری به 0 و باری سجامی به 100 تنظیم شد"}, status=status.HTTP_403_FORBIDDEN)
+            return Response({"message": "امتیاز شما برای کارگزاری به 0 و باری سجامی به 100 تنظیم شد"}, status=status.HTTP_200_OK)
         else:
             if missions:
                 missions.broker_done = True
@@ -382,6 +395,7 @@ class VerifyOtpSejamViewSet(APIView):
                 missions.test_question_1_open = True
                 missions.save()
         return Response({'message': 'اطلاعات سجامی کاربر ثبت شد و امتیاز کارگزاری و سجامی به 100 تنظیم شد'}, status=status.HTTP_200_OK)        
+
 
 
 class VerifyTokenView(APIView):
@@ -408,7 +422,4 @@ class VerifyTokenView(APIView):
                 {'valid': False, 'message': 'توکن نامعتبر است'}, 
                 status=status.HTTP_401_UNAUTHORIZED
             )
-
-
-
 
