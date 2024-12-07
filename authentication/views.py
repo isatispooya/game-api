@@ -356,33 +356,32 @@ class VerifyOtpSejamViewSet(APIView):
             missions.sejam_end_date = now()
             missions.sejam_score = 100
             missions.save()
-        if missions.broker_open == True:
-            excel_file = 'broker.xlsx'
-            if not excel_file:
-                return Response({"error": "فایل اکسل یافت نشد"}, status=status.HTTP_400_BAD_REQUEST)
-            
-            df = pd.read_excel(excel_file)
-            if df.empty:
-                return Response({"error": "فایل اکسل خالی است"}, status=status.HTTP_400_BAD_REQUEST)
-            
-            if 'کدملی' not in df.columns:
-                return Response({"error": "کدملی در فایل اکسل یافت نشد"}, status=status.HTTP_400_BAD_REQUEST)
-            uniqueIdentifier = str(uniqueIdentifier)
-            if not (df['کدملی'].astype(str) == str(uniqueIdentifier)).any():
-                if missions:
-                    missions.broker_done = True
-                    missions.broker_end_date = now()
-                    missions.broker_score = 0
-                    missions.save()
-                return Response({"error": "امتیاز شما برای کارگزاری به 0 و باری سجامی به 100 تنظیم شد"}, status=status.HTTP_403_FORBIDDEN)
-            else:
-                if missions:
-                    missions.broker_done = True
-                    missions.broker_end_date = now()
-                    missions.broker_score = 100
-                    missions.puzzle_open = True
-                    missions.save()
-            return Response({'message': 'اطلاعات سجامی کاربر ثبت شد و امتیاز کارگزاری و سجامی به 100 تنظیم شد'}, status=status.HTTP_200_OK)        
+        excel_file = 'broker.xlsx'
+        if not excel_file:
+            return Response({"error": "فایل اکسل یافت نشد"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        df = pd.read_excel(excel_file)
+        if df.empty:
+            return Response({"error": "فایل اکسل خالی است"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if 'کدملی' not in df.columns:
+            return Response({"error": "کدملی در فایل اکسل یافت نشد"}, status=status.HTTP_400_BAD_REQUEST)
+        uniqueIdentifier = str(uniqueIdentifier)
+        if not (df['کدملی'].astype(str) == str(uniqueIdentifier)).any():
+            if missions:
+                missions.broker_done = True
+                missions.broker_end_date = now()
+                missions.broker_score = 0
+                missions.save()
+            return Response({"error": "امتیاز شما برای کارگزاری به 0 و باری سجامی به 100 تنظیم شد"}, status=status.HTTP_403_FORBIDDEN)
+        else:
+            if missions:
+                missions.broker_done = True
+                missions.broker_end_date = now()
+                missions.broker_score = 100
+                missions.test_question_1_open = True
+                missions.save()
+        return Response({'message': 'اطلاعات سجامی کاربر ثبت شد و امتیاز کارگزاری و سجامی به 100 تنظیم شد'}, status=status.HTTP_200_OK)        
 
 
 class VerifyTokenView(APIView):
