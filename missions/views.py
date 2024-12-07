@@ -17,119 +17,131 @@ class MissionsViewSet(APIView):
         user = request.user
         user_profile = UserProfile.objects.filter(user=user).first()
         if mission == 3 : 
-            
             mission = Missions.objects.filter(user=user).first()
             if not mission:
                 return Response({"error": "ماموریت یافت نشد"}, status=status.HTTP_404_NOT_FOUND)
-            if mission.test_question_1_open == True:
-                question_score_1 = request.data.get('question_score_1')
-                mission.test_question_1_score = question_score_1
-                mission.test_question_1_done = True
-                mission.test_question_1_end_date = timezone.now()
-                mission.puzzle_open = True
-                mission.save()
-                return Response({"message": "ماموریت با موفقیت ثبت شد"}, status=status.HTTP_200_OK)
+            
+            if not mission.test_question_1_open:
+                return Response({"error": "این ماموریت هنوز باز نشده است"}, status=status.HTTP_400_BAD_REQUEST)
+                
+            question_score_1 = request.data.get('question_score_1')
+            mission.test_question_1_score = question_score_1
+            mission.test_question_1_done = True
+            mission.test_question_1_end_date = timezone.now()
+            mission.puzzle_open = True
+            mission.save()
+            return Response({"message": "ماموریت با موفقیت ثبت شد"}, status=status.HTTP_200_OK)
+        
         
         elif mission == 4 : 
             mission = Missions.objects.filter(user=user).first()
             if not mission:
                 return Response({"error": "ماموریت یافت نشد"}, status=status.HTTP_404_NOT_FOUND)
-            if mission.puzzle_open == True:
-                mission.puzzle_done = True
-                mission.puzzle_score = 100
-                mission.puzzle_end_date = timezone.now()
-                mission.test_question_2_open = True
-                mission.save()
-                return Response({"message": "ماموریت با موفقیت ثبت شد"}, status=status.HTTP_200_OK)
-        
+            if not mission.test_question_1_open:
+                return Response({"error": "این ماموریت هنوز باز نشده است"}, status=status.HTTP_400_BAD_REQUEST)
+            mission.puzzle_done = True
+            mission.puzzle_score = 100
+            mission.puzzle_end_date = timezone.now()
+            mission.test_question_2_open = True
+            mission.save()
+            return Response({"message": "ماموریت با موفقیت ثبت شد"}, status=status.HTTP_200_OK)
+    
         elif mission == 5 : 
             mission = Missions.objects.filter(user=user).first()
             if not mission:
                 return Response({"error": "ماموریت یافت نشد"}, status=status.HTTP_404_NOT_FOUND)
-            if mission.test_question_2_open == True:
-                question_score_2 = request.data.get('question_score_2')
-                mission.test_question_2_score = question_score_2
-                mission.test_question_2_done = True
-                mission.test_question_2_end_date = timezone.now()
-                mission.code_open = True
-                mission.save()
+            if not mission.test_question_1_open:
+                return Response({"error": "این ماموریت هنوز باز نشده است"}, status=status.HTTP_400_BAD_REQUEST)
+  
+            question_score_2 = request.data.get('question_score_2')
+            mission.test_question_2_score = question_score_2
+            mission.test_question_2_done = True
+            mission.test_question_2_end_date = timezone.now()
+            mission.code_open = True
+            mission.save()
             return Response({"message": "ماموریت با موفقیت ثبت شد"}, status=status.HTTP_200_OK)
         
         elif mission == 6 :
             mission = Missions.objects.filter(user=user).first()
             if not mission:
                 return Response({"error": "ماموریت یافت نشد"}, status=status.HTTP_404_NOT_FOUND)
-            if mission.code_open == True:
-                mission.code_done = True
-                mission.code_score = 100
-                mission.code_end_date = timezone.now()
-                mission.field_research_open = True
-                mission.save()
-                return Response({"message": "ماموریت با موفقیت ثبت شد"}, status=status.HTTP_200_OK)
-        
+            if not mission.test_question_1_open:
+                return Response({"error": "این ماموریت هنوز باز نشده است"}, status=status.HTTP_400_BAD_REQUEST)
+            mission.code_done = True
+            mission.code_score = 100
+            mission.code_end_date = timezone.now()
+            mission.field_research_open = True
+            mission.save()
+            return Response({"message": "ماموریت با موفقیت ثبت شد"}, status=status.HTTP_200_OK)
+    
         elif mission == 7 : 
             mission = Missions.objects.filter(user=user).first()
             if not mission:
                 return Response({"error": "ماموریت یافت نشد"}, status=status.HTTP_404_NOT_FOUND)
-            if mission.field_research_open == True:
-                mission.field_research_done = True
-                mission.field_research_score = 100
-                mission.field_research_end_date = timezone.now()
-                mission.test_question_3_open = True
-                mission.save()
-                return Response({"message": "ماموریت با موفقیت ثبت شد"}, status=status.HTTP_200_OK)
-            
+            if not mission.test_question_1_open:
+                return Response({"error": "این ماموریت هنوز باز نشده است"}, status=status.HTTP_400_BAD_REQUEST)
+            mission.field_research_done = True
+            mission.field_research_score = 100
+            mission.field_research_end_date = timezone.now()
+            mission.test_question_3_open = True
+            mission.save()
+            return Response({"message": "ماموریت با موفقیت ثبت شد"}, status=status.HTTP_200_OK)
+        
         elif mission == 8 : 
             mission = Missions.objects.filter(user=user).first()
             if not mission:
                 return Response({"error": "ماموریت یافت نشد"}, status=status.HTTP_404_NOT_FOUND)
-            if mission.test_question_3_open == True:
-                question_score_3 = request.data.get('question_score_3')
-                mission.test_question_3_score = question_score_3
-                mission.test_question_3_done = True
-                mission.test_question_3_end_date = timezone.now()
-                mission.coffee_open = True
-                mission.save()
-                return Response({"message": "ماموریت با موفقیت ثبت شد"}, status=status.HTTP_200_OK)
-        
+            if not mission.test_question_1_open:
+                return Response({"error": "این ماموریت هنوز باز نشده است"}, status=status.HTTP_400_BAD_REQUEST)
+            question_score_3 = request.data.get('question_score_3')
+            mission.test_question_3_score = question_score_3
+            mission.test_question_3_done = True
+            mission.test_question_3_end_date = timezone.now()
+            mission.coffee_open = True
+            mission.save()
+            return Response({"message": "ماموریت با موفقیت ثبت شد"}, status=status.HTTP_200_OK)
+    
         elif mission == 9 : 
             mission = Missions.objects.filter(user=user).first()
             if not mission:
                 return Response({"error": "ماموریت یافت نشد"}, status=status.HTTP_404_NOT_FOUND)
-            if mission.coffee_open == True:
-                mission.coffee_done = True
-                mission.coffee_score = 100
-                mission.coffee_end_date = timezone.now()
-                mission.test_question_4_open = True
-                mission.save()
-                return Response({"message": "ماموریت با موفقیت ثبت شد"}, status=status.HTTP_200_OK)
+            if not mission.test_question_1_open:
+                return Response({"error": "این ماموریت هنوز باز نشده است"}, status=status.HTTP_400_BAD_REQUEST)
+            mission.coffee_done = True
+            mission.coffee_score = 100
+            mission.coffee_end_date = timezone.now()
+            mission.test_question_4_open = True
+            mission.save()
+            return Response({"message": "ماموریت با موفقیت ثبت شد"}, status=status.HTTP_200_OK)
         
         elif mission == 10 : 
             mission = Missions.objects.filter(user=user).first()
             if not mission:
                 return Response({"error": "ماموریت یافت نشد"}, status=status.HTTP_404_NOT_FOUND)
-            if mission.test_question_4_open == True:
-                question_score_4 = request.data.get('question_score_4')
-                mission.test_question_4_score = question_score_4
-                mission.test_question_4_done = True
-                mission.test_question_4_end_date = timezone.now()
-                mission.coffee_open = True
-                mission.save()
-                return Response({"message": "ماموریت با موفقیت ثبت شد"}, status=status.HTTP_200_OK)
-        
+            if not mission.test_question_1_open:
+                return Response({"error": "این ماموریت هنوز باز نشده است"}, status=status.HTTP_400_BAD_REQUEST)
+            question_score_4 = request.data.get('question_score_4')
+            mission.test_question_4_score = question_score_4
+            mission.test_question_4_done = True
+            mission.test_question_4_end_date = timezone.now()
+            mission.coffee_open = True
+            mission.save()
+            return Response({"message": "ماموریت با موفقیت ثبت شد"}, status=status.HTTP_200_OK)
+    
         elif mission == 11 : 
             mission = Missions.objects.filter(user=user).first()
             if not mission:
                 return Response({"error": "ماموریت یافت نشد"}, status=status.HTTP_404_NOT_FOUND)
-            if mission.upload_photo_open == True:
-                photo = request.FILES.get('photo')
-                mission.photo = photo
-                mission.upload_photo_done = True
-                mission.upload_photo_score = 100
-                mission.upload_photo_end_date = timezone.now()
-                mission.save()
-                return Response({"message": "ماموریت با موفقیت ثبت شد"}, status=status.HTTP_200_OK)
-        
+            if not mission.test_question_1_open:
+                return Response({"error": "این ماموریت هنوز باز نشده است"}, status=status.HTTP_400_BAD_REQUEST)
+            photo = request.FILES.get('photo')
+            mission.photo = photo
+            mission.upload_photo_done = True
+            mission.upload_photo_score = 100
+            mission.upload_photo_end_date = timezone.now()
+            mission.save()
+            return Response({"message": "ماموریت با موفقیت ثبت شد"}, status=status.HTTP_200_OK)
+    
         else : 
             return Response({"error": "ماموریت یافت نشد"}, status=status.HTTP_404_NOT_FOUND)
         
