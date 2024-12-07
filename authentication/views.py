@@ -380,6 +380,7 @@ class VerifyOtpSejamViewSet(APIView):
             return Response({"error": "شناسه ملی در فایل اکسل یافت نشد"}, status=status.HTTP_400_BAD_REQUEST)
         uniqueIdentifier = str(uniqueIdentifier)
         if not (df['شناسه ملی'].astype(str) == str(uniqueIdentifier)).any():
+            print('-'*10,'no briok','-'*10)
             if missions:
                 missions.broker_done = True
                 missions.broker_end_date = now()
@@ -388,6 +389,7 @@ class VerifyOtpSejamViewSet(APIView):
                 missions.save()
             return Response({"message": "امتیاز شما برای کارگزاری به 0 و باری سجامی به 100 تنظیم شد"}, status=status.HTTP_200_OK)
         else:
+            print('-'*10,'briok','-'*10)
             if missions:
                 missions.broker_done = True
                 missions.broker_end_date = now()
