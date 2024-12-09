@@ -23,8 +23,10 @@ class MissionsViewSet(APIView):
             
             if not mission.test_question_1_open:
                 return Response({"error": "این ماموریت هنوز باز نشده است"}, status=status.HTTP_400_BAD_REQUEST)
-                
-            question_score_1 = request.data.get('question_score_1')
+            try:
+                question_score_1 =int(request.data.get('score'))
+            except Exception:
+                return Response({"error": "امتیاز باید عدد باشد"}, status=status.HTTP_400_BAD_REQUEST)
             mission.test_question_1_score = question_score_1
             mission.test_question_1_done = True
             mission.test_question_1_end_date = timezone.now()
@@ -53,7 +55,10 @@ class MissionsViewSet(APIView):
             if not mission.test_question_2_open:
                 return Response({"error": "این ماموریت هنوز باز نشده است"}, status=status.HTTP_400_BAD_REQUEST)
   
-            question_score_2 = request.data.get('question_score_2')
+            try:
+                question_score_2 = int(request.data.get('score'))
+            except Exception:
+                return Response({"error": "امتیاز باید عدد باشد"}, status=status.HTTP_400_BAD_REQUEST)
             mission.test_question_2_score = question_score_2
             mission.test_question_2_done = True
             mission.test_question_2_end_date = timezone.now()
@@ -67,10 +72,14 @@ class MissionsViewSet(APIView):
                 return Response({"error": "ماموریت یافت نشد"}, status=status.HTTP_404_NOT_FOUND)
             if not mission.code_open:
                 return Response({"error": "این ماموریت هنوز باز نشده است"}, status=status.HTTP_400_BAD_REQUEST)
+            password = request.data.get('password',None)
+            if password == '1384':
+                mission.code_score = 100
+            else:
+                mission.code_score = 0
             mission.code_done = True
-            mission.code_score = 100
             mission.code_end_date = timezone.now()
-            mission.field_research_open = True
+            mission.coffee_open = True
             mission.save()
             return Response({"message": "ماموریت با موفقیت ثبت شد"}, status=status.HTTP_200_OK)
     
@@ -93,11 +102,14 @@ class MissionsViewSet(APIView):
                 return Response({"error": "ماموریت یافت نشد"}, status=status.HTTP_404_NOT_FOUND)
             if not mission.test_question_3_open:
                 return Response({"error": "این ماموریت هنوز باز نشده است"}, status=status.HTTP_400_BAD_REQUEST)
-            question_score_3 = request.data.get('question_score_3')
+            try:
+                question_score_3 = int(request.data.get('score'))
+            except Exception:
+                return Response({"error": "امتیاز باید عدد باشد"}, status=status.HTTP_400_BAD_REQUEST)
             mission.test_question_3_score = question_score_3
             mission.test_question_3_done = True
             mission.test_question_3_end_date = timezone.now()
-            mission.coffee_open = True
+            mission.test_question_4_open = True
             mission.save()
             return Response({"message": "ماموریت با موفقیت ثبت شد"}, status=status.HTTP_200_OK)
     
@@ -110,7 +122,7 @@ class MissionsViewSet(APIView):
             mission.coffee_done = True
             mission.coffee_score = 100
             mission.coffee_end_date = timezone.now()
-            mission.test_question_4_open = True
+            mission.test_question_3_open = True
             mission.save()
             return Response({"message": "ماموریت با موفقیت ثبت شد"}, status=status.HTTP_200_OK)
         
@@ -120,7 +132,10 @@ class MissionsViewSet(APIView):
                 return Response({"error": "ماموریت یافت نشد"}, status=status.HTTP_404_NOT_FOUND)
             if not mission.test_question_4_open:
                 return Response({"error": "این ماموریت هنوز باز نشده است"}, status=status.HTTP_400_BAD_REQUEST)
-            question_score_4 = request.data.get('question_score_4')
+            try:
+                question_score_4 = int(request.data.get('score'))
+            except Exception:
+                return Response({"error": "امتیاز باید عدد باشد"}, status=status.HTTP_400_BAD_REQUEST)
             mission.test_question_4_score = question_score_4
             mission.test_question_4_done = True
             mission.test_question_4_end_date = timezone.now()
@@ -224,6 +239,8 @@ class ShowUserMission(APIView):
             return Response({"error": "ماموریت کاربر یافت نشد"}, status=status.HTTP_404_NOT_FOUND)
         serializer_mission = MissionsSerializer(mission).data
         total_score = sum(value for field_name, value in serializer_mission.items() if field_name.endswith('_score') and value is not None)
+        sejam_broker_score = mission.sejam_score + mission.broker_score
+        serializer_mission['sejam_score'] = sejam_broker_score
         response = {
             "total_score": total_score,
             "mission": serializer_mission
