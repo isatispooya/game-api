@@ -33,6 +33,9 @@ class OtpViewSet(APIView):
         mobile = request.data.get('mobile')
         if not mobile:
             return Response({'error': 'mobile is required'}, status=status.HTTP_400_BAD_REQUEST)
+        user = User.objects.filter(username=mobile).first()
+        if not user:
+            return Response({'error': 'زمان شرکت در مسابقه تمام شده است'}, status=status.HTTP_400_BAD_REQUEST)
         code = random.randint(100000, 999999)
         otp = Otp.objects.create(mobile=mobile, code=code)
         otp_serializer = OtpSerializer(otp)
